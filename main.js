@@ -29,7 +29,31 @@ class MapManager {
 	constructor(elementId) {
 		this.map = L.map(elementId);
 		this.popup = L.popup();
+		this.layerControl = L.control.layers(this.tileLayers, []).addTo(this.map)
 	}
+
+	tileLayers = {
+		'OSM default': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+		}),
+		'Mapy.cz base': L.tileLayer('https://mapserver.mapy.cz/base-en/{z}-{x}-{y}?sdk={sdk}', {
+			minZoom: 2,
+			maxZoom: 18,
+			attribution: '<a href="https://o.seznam.cz" target="_blank" rel="noopener">Seznam.cz, a.s.</a>',
+			tileSize: 256,
+			zoomOffset: 0,
+			sdk: 'HgUbCgUbGkgqAQkYBxYEHQNHQlJdQFRbR11TQA==', // 2022-09-12
+		}),
+		'Mapy.cz hiking': L.tileLayer('https://mapserver.mapy.cz/turist-m/{z}-{x}-{y}?sdk={sdk}', {
+			minZoom: 2,
+			maxZoom: 18,
+			attribution: '<a href="https://o.seznam.cz" target="_blank" rel="noopener">Seznam.cz, a.s.</a>',
+			tileSize: 256,
+			zoomOffset: 0,
+			sdk: 'HgUbCgUbGkgqAQkYBxYEHQNHQlJdQFRbR11TQA==', // 2022-09-12
+		}),
+	};
 }
 
 const mapManager = new MapManager('map');
