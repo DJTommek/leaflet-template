@@ -8,6 +8,7 @@ class AppStorage {
 	static PREFIX = 'djtommek-leaflet-template';
 
 	static KEY_MAP_INIT = 'mapInit';
+	static KEY_MAP_BASE_LAYER = 'mapBaseLayer';
 
 	/**
 	 * @param {string} key
@@ -67,9 +68,23 @@ if (storedMapInit) {
 	mapManager.map.setView([50, 15], 8); // Czechia
 }
 
+const storedMapBaseLayer = AppStorage.load(AppStorage.KEY_MAP_BASE_LAYER);
+if (storedMapBaseLayer && storedMapBaseLayer in mapManager.tileLayers) {
+    mapManager.tileLayers[storedMapBaseLayer].addTo(mapManager.map);
+} else {
+    mapManager.tileLayers['OSM default'].addTo(mapManager.map);
+}
+
 mapManager.map.on('load zoomend moveend', function (event) {
 	const mapCenter = mapManager.map.getCenter();
-	AppStorage.save(AppStorage.KEY_MAP_INIT, mapCenter.lat + ',' + mapCenter.lng + ';' + mapManager.map.getZoom());
+	AppStorage.save(AppStorage.KEY_MAP_INIT, [
+		mapCenter.lat + ',' + mapCenter.lng,
+		mapManager.map.getZoom(),
+	].join(';'))
+})
+
+mapManager.map.on('baselayerchange', function (event) {
+    AppStorage.save(AppStorage.KEY_MAP_BASE_LAYER, event.name);
 })
 
 mapManager.map.on('click', function (event) {
@@ -79,9 +94,3 @@ mapManager.map.on('click', function (event) {
 		.setContent('Coordinates: ' + locationKey)
 		.openOn(mapManager.map)
 });
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
-	attribution: '© OpenStreetMap'
-}).addTo(mapManager.map);
-
