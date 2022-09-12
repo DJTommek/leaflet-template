@@ -4,6 +4,27 @@ class Utils {
 	}
 }
 
+class AppStorage {
+	static PREFIX = 'djtommek-leaflet-template';
+
+	static KEY_MAP_INIT = 'mapInit';
+
+	/**
+	 * @param {string} key
+	 */
+	static load(key) {
+		return localStorage.getItem(AppStorage.PREFIX + key);
+	}
+
+	/**
+	 * @param {string} key
+	 * @param value
+	 */
+	static save(key, value) {
+		localStorage.setItem(AppStorage.PREFIX + key, value)
+	}
+}
+
 class MapManager {
 	constructor(elementId) {
 		this.map = L.map(elementId);
@@ -12,7 +33,20 @@ class MapManager {
 }
 
 const mapManager = new MapManager('map');
-mapManager.map.setView([50, 15], 8); // Czechia
+
+const storedMapInit = AppStorage.load(AppStorage.KEY_MAP_INIT);
+if (storedMapInit) {
+	const [latLngRaw, zoom] = storedMapInit.split(';');
+	const latLng = latLngRaw.split(',');
+	mapManager.map.setView(latLng, zoom);
+} else {
+	mapManager.map.setView([50, 15], 8); // Czechia
+}
+
+mapManager.map.on('load zoomend moveend', function (event) {
+	const mapCenter = mapManager.map.getCenter();
+	AppStorage.save(AppStorage.KEY_MAP_INIT, mapCenter.lat + ',' + mapCenter.lng + ';' + mapManager.map.getZoom());
+})
 
 mapManager.map.on('click', function (event) {
 	const locationKey = Utils.locationKey(event.latlng);
