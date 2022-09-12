@@ -31,6 +31,7 @@ class MapManager {
 		this.map = L.map(elementId);
 		this.popup = L.popup();
 		this.layerControl = L.control.layers(this.tileLayers, []).addTo(this.map)
+		this.scale = L.control.scale().addTo(this.map);
 	}
 
 	tileLayers = {
