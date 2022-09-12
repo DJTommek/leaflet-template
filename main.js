@@ -70,9 +70,9 @@ if (storedMapInit) {
 
 const storedMapBaseLayer = AppStorage.load(AppStorage.KEY_MAP_BASE_LAYER);
 if (storedMapBaseLayer && storedMapBaseLayer in mapManager.tileLayers) {
-    mapManager.tileLayers[storedMapBaseLayer].addTo(mapManager.map);
+	mapManager.tileLayers[storedMapBaseLayer].addTo(mapManager.map);
 } else {
-    mapManager.tileLayers['OSM default'].addTo(mapManager.map);
+	mapManager.tileLayers['OSM default'].addTo(mapManager.map);
 }
 
 mapManager.map.on('load zoomend moveend', function (event) {
@@ -84,7 +84,7 @@ mapManager.map.on('load zoomend moveend', function (event) {
 })
 
 mapManager.map.on('baselayerchange', function (event) {
-    AppStorage.save(AppStorage.KEY_MAP_BASE_LAYER, event.name);
+	AppStorage.save(AppStorage.KEY_MAP_BASE_LAYER, event.name);
 })
 
 mapManager.map.on('click', function (event) {
