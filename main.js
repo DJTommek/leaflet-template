@@ -111,10 +111,9 @@ mapManager.map.on('baselayerchange', function (event) {
 })
 
 mapManager.map.on('click', function (event) {
-	const locationKey = Utils.locationKey(event.latlng);
 	mapManager.popup
 		.setLatLng(event.latlng)
-		.setContent('Coordinates: ' + locationKey)
+		.setContent(BetterLocation.popupContentPrefix(event.latlng))
 		.openOn(mapManager.map)
 });
 
