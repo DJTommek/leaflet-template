@@ -4,6 +4,28 @@ class Utils {
 	}
 }
 
+class BetterLocation {
+	static popupContentPrefix(coords) {
+		const lat = coords.lat.toFixed(6);
+		const lon = coords.lng.toFixed(6);
+		const latLon = Utils.locationKey(coords);
+
+		let popupContent = '';
+		popupContent += ' <code>' + latLon + '</code>';
+		popupContent += ' <i class="bi bi-clipboard copy-to-clipboard" data-clipboard-text="' + latLon + '" title="Zkopíruj souřadnice do schránky"></i>';
+		popupContent += ' | <a href="https://better-location.palider.cz/' + latLon + '" target="_blank" title="Otevřít web Better location">BetterLocation</a>'
+		popupContent += '<br>';
+		popupContent += '<a href="https://www.google.com/maps/place/' + latLon + '?q=' + latLon + '" target="_blank" title="Navigovat pomocí Google maps">Google maps</a>';
+		popupContent += ' | ';
+		popupContent += '<a href="https://mapy.cz/zakladni?y=' + lat + '&x=' + lon + '&source=coor&id=' + lon + '%2C' + lat + '" target="_blank" title="Navigovat pomocí Mapy.cz">Mapy.cz</a>';
+		popupContent += ' | '
+		popupContent += '<a href="https://www.waze.com/ul?ll=' + latLon + '&navigate=yes" target="_blank" title="Navigovat pomocí Waze">Waze</a>'
+		popupContent += ' | '
+		popupContent += '<a href="https://share.here.com/l/' + latLon + '?p=yes" target="_blank" title="Navigovat pomocí HERE WeGo">HERE</a>'
+		return popupContent;
+	}
+}
+
 class AppStorage {
 	static PREFIX = 'djtommek-leaflet-template';
 
