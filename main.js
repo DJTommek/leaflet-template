@@ -95,3 +95,25 @@ mapManager.map.on('click', function (event) {
 		.setContent('Coordinates: ' + locationKey)
 		.openOn(mapManager.map)
 });
+
+/**
+ * Enable copy-to-clipboard buttons
+ */
+if (ClipboardJS.isSupported()) {
+	const clipboard = new ClipboardJS('.copy-to-clipboard');
+	clipboard.on('success', function (event) { // temporary change icon to checkmark if copied successfully
+		const classList = event.trigger.classList;
+		if (classList.contains('bi-clipboard')) {
+			classList.add('bi-clipboard-check');
+			classList.remove('bi-clipboard');
+			setTimeout(function () {
+				classList.add('bi-clipboard');
+				classList.remove('bi-clipboard-check');
+			}, 1000);
+		}
+	});
+
+	clipboard.on('error', function (event) {
+		window.prompt('Error while copying text, you have to copy it manually:', event.text);
+	});
+}
