@@ -26,6 +26,42 @@ class BetterLocation {
 	}
 }
 
+/**
+ * Nominatim indexes named (or numbered) features within the OpenStreetMap (OSM) dataset and a subset of other unnamed
+ * features (pubs, hotels, churches, etc).
+ *
+ * @link https://nominatim.org/release-docs/latest/api/Overview/
+ * @link https://github.com/osm-search/Nominatim
+ * @link https://nominatim.openstreetmap.org/
+ * @link https://operations.osmfoundation.org/
+ */
+class Nominatim {
+	/**
+	 * @param {string|URL} url
+	 */
+	constructor(url = 'https://nominatim.openstreetmap.org/') {
+		this.url = new URL(url);
+		this.url.searchParams.set('format', 'json');
+	}
+
+	/**
+	 * Reverse geocoding generates an address from a latitude and longitude.
+	 *
+	 * @param {number} lat
+	 * @param {number} lon
+	 * @returns {Promise<Response>}
+	 * @link https://nominatim.org/release-docs/latest/api/Reverse/
+	 */
+	async reverse(lat, lon) {
+		const url = new URL(this.url);
+		url.pathname = 'reverse';
+		url.searchParams.set('lat', lat.toFixed(6));
+		url.searchParams.set('lon', lon.toFixed(6));
+		const request = new Request(url);
+		return await fetch(request);
+	}
+}
+
 class AppStorage {
 	static PREFIX = 'djtommek-leaflet-template';
 
