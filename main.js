@@ -117,6 +117,7 @@ class MapManager {
 }
 
 const mapManager = new MapManager('map');
+const nominatim = new Nominatim();
 
 const storedMapInit = AppStorage.load(AppStorage.KEY_MAP_INIT);
 if (storedMapInit) {
@@ -146,11 +147,24 @@ mapManager.map.on('baselayerchange', function (event) {
 	AppStorage.save(AppStorage.KEY_MAP_BASE_LAYER, event.name);
 })
 
-mapManager.map.on('click', function (event) {
+mapManager.map.on('click', async function (event) {
+	const locationKey = Utils.locationKey(event.latlng);
+	const elementId = 'address-' + locationKey;
+
+	let popupContentText = BetterLocation.popupContentPrefix(event.latlng);
+	popupContentText += '<p>' +
+		'<b>Address</b>: <span id="' + elementId + '">' +
+		'<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...' +
+		'</span></p>';
+
 	mapManager.popup
 		.setLatLng(event.latlng)
-		.setContent(BetterLocation.popupContentPrefix(event.latlng))
-		.openOn(mapManager.map)
+		.setContent(popupContentText)
+		.openOn(mapManager.map);
+
+	const response = await nominatim.reverse(event.latlng.lat, event.latlng.lng);
+	const address = await response.json();
+	document.getElementById(elementId).textContent = address.display_name ?? address.error ?? 'Unable to load address';
 });
 
 /**
