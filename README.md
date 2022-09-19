@@ -2,6 +2,8 @@
 
 Fully prepared and ready to use Leaflet with various features out of the box, no need to setup anything.
 
+## [Live demo](https://djtommek.github.io/leaflet-template/)
+
 All extermal libraries are stored within project, so once this project is downloaded, Internet connection is required 
 only to download map tiles. 
 
